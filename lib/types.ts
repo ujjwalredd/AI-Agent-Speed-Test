@@ -81,7 +81,6 @@ export interface SubScores {
 }
 
 export interface BenchmarkResult {
-  runId?: string;
   modelName: string;
   provider: ProviderName;
   runsPerTask: number;

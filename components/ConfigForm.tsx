@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-import ApiKeyVault, { type ApiKeyVaultHandle } from "@/components/ApiKeyVault";
-import { PlayIcon } from "@/components/Icons";
+import { useState } from "react";
+import { EyeIcon, EyeOffIcon, LockIcon, PlayIcon } from "@/components/Icons";
 import { CLAUDE_MODELS } from "@/lib/models";
 import type { BenchmarkConfig } from "@/lib/client";
 
@@ -19,9 +18,10 @@ export default function ConfigForm({
   compact?: boolean;
   defaults?: Partial<BenchmarkConfig>;
 }) {
-  const vaultRef = useRef<ApiKeyVaultHandle | null>(null);
   const [useMock, setUseMock] = useState(defaults?.useMock ?? true);
   const [model, setModel] = useState(defaults?.model ?? CLAUDE_MODELS[0].id);
+  const [apiKey, setApiKey] = useState("");
+  const [showKey, setShowKey] = useState(false);
   const [systemPrompt, setSystemPrompt] = useState(defaults?.systemPrompt ?? "");
   const [runsPerTask, setRunsPerTask] = useState(defaults?.runsPerTask ?? 3);
   const [thinking, setThinking] = useState(defaults?.thinking ?? false);
@@ -31,11 +31,9 @@ export default function ConfigForm({
   async function submit() {
     setSubmitting(true);
     try {
-      const creds = useMock ? {} : (vaultRef.current?.getCredentials() ?? {});
       await onRun({
         model,
-        apiKey: creds.apiKey,
-        keyId: creds.keyId,
+        apiKey: useMock ? undefined : apiKey.trim() || undefined,
         systemPrompt: systemPrompt.trim() || undefined,
         runsPerTask,
         thinking,
@@ -101,7 +99,34 @@ export default function ConfigForm({
             </select>
           </Field>
 
-          <ApiKeyVault disabled={busy} ref={vaultRef} />
+          <Field label="Anthropic API key">
+            <div className="relative">
+              <input
+                autoComplete="off"
+                className="input pr-12 text-sm"
+                disabled={busy}
+                onChange={(e) => setApiKey(e.target.value)}
+                placeholder="sk-ant-…"
+                spellCheck={false}
+                type={showKey ? "text" : "password"}
+                value={apiKey}
+              />
+              <button
+                aria-label={showKey ? "Hide API key" : "Show API key"}
+                className="icon-button absolute right-1 top-1/2 h-9 min-h-9 w-9 min-w-9 -translate-y-1/2 text-ink-soft hover:text-ink"
+                disabled={busy}
+                onClick={() => setShowKey((v) => !v)}
+                title={showKey ? "Hide" : "Show"}
+                type="button"
+              >
+                {showKey ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+              </button>
+            </div>
+            <p className="mt-1.5 flex items-center gap-1.5 text-xs text-ink-soft">
+              <LockIcon className="h-3.5 w-3.5" />
+              Sent over HTTPS, used for this run only, never saved.
+            </p>
+          </Field>
 
           <Field label="System prompt" hint="Optional. Applied to every benchmark task.">
             <textarea

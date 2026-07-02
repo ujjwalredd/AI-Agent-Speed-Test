@@ -2,8 +2,7 @@ import type { ProgressEvent } from "./types";
 
 export interface BenchmarkConfig {
   model: string;
-  apiKey?: string;
-  keyId?: string; // id of a saved (encrypted-at-rest) key
+  apiKey?: string; // ephemeral: used for this run only, never stored
   systemPrompt?: string;
   runsPerTask: number;
   thinking?: boolean;
