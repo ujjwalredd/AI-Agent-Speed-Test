@@ -1,0 +1,345 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ */
+/* Big Type Editorial — design tokens                                   */
+/* Paper canvas, near-black ink, one vermillion signal accent.          */
+/* ------------------------------------------------------------------ */
+
+:root {
+  color-scheme: light;
+
+  --paper: #fafaf7;
+  --paper-rgb: 250 250 247;
+  --surface: #ffffff;
+  --surface-rgb: 255 255 255;
+  --ink: #0e0e0c;
+  --ink-rgb: 14 14 12;
+  --ink-soft: #57534e;
+  --ink-soft-rgb: 87 83 78;
+  --signal: #ff4d00;
+  --signal-rgb: 255 77 0;
+  --signal-ink: #c2410c;
+  --signal-ink-rgb: 194 65 12;
+  --ok: #15803d;
+  --ok-rgb: 21 128 61;
+  --warn: #b45309;
+  --warn-rgb: 180 83 9;
+  --bad: #c2410c;
+  --bad-rgb: 194 65 12;
+  --rule: rgba(14, 14, 12, 0.14);
+  --rule-strong: rgba(14, 14, 12, 0.85);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(255, 77, 0, 0.2);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+/* ------------------------------------------------------------------ */
+/* Typography recipes                                                   */
+/* ------------------------------------------------------------------ */
+
+.font-display {
+  font-family: var(--font-display), var(--font-sans), ui-sans-serif, sans-serif;
+}
+
+.font-data {
+  font-family: var(--font-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The broadsheet headline. */
+.display-hero {
+  font-family: var(--font-display), ui-sans-serif, sans-serif;
+  font-size: clamp(3.25rem, 11vw, 8.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+
+.display-title {
+  font-family: var(--font-display), ui-sans-serif, sans-serif;
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  text-transform: uppercase;
+}
+
+/* Tiny uppercase mono label above data values. */
+.mono-label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* Oversized ghost section numerals. */
+.ghost-num {
+  font-family: var(--font-display), ui-sans-serif, sans-serif;
+  font-size: clamp(4rem, 9vw, 7.5rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: rgba(14, 14, 12, 0.07);
+  user-select: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Structure recipes                                                    */
+/* ------------------------------------------------------------------ */
+
+.rule-top {
+  border-top: 1px solid var(--rule);
+}
+
+.rule-strong {
+  border-top: 2px solid var(--rule-strong);
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+}
+
+/* ------------------------------------------------------------------ */
+/* Interactive recipes                                                  */
+/* ------------------------------------------------------------------ */
+
+.btn {
+  align-items: center;
+  border-radius: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 700;
+  gap: 0.5rem;
+  justify-content: center;
+  min-height: 44px;
+  touch-action: manipulation;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease,
+    opacity 200ms ease,
+    transform 120ms ease;
+}
+
+.btn:active {
+  transform: scale(0.99);
+}
+
+.btn-signal {
+  background: var(--signal);
+  color: #ffffff;
+}
+
+.btn-signal:hover {
+  background: var(--ink);
+}
+
+.btn-ink {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn-ink:hover {
+  background: var(--signal);
+}
+
+.btn-outline {
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  color: var(--ink);
+}
+
+.btn-outline:hover {
+  border-color: var(--signal);
+  color: var(--signal-ink);
+}
+
+/* Editorial underline link. */
+.link-underline {
+  border-bottom: 2px solid var(--ink);
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 700;
+  padding-bottom: 2px;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.link-underline:hover,
+.link-underline[aria-current="page"] {
+  border-color: var(--signal);
+  color: var(--signal-ink);
+}
+
+.icon-button {
+  align-items: center;
+  border-radius: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease;
+}
+
+.icon-button:hover {
+  background: rgba(14, 14, 12, 0.05);
+}
+
+.input {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--ink);
+  min-height: 44px;
+  padding: 10px 12px;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+  width: 100%;
+}
+
+.input::placeholder {
+  color: #a8a29e;
+}
+
+.input:focus {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(255, 77, 0, 0.18);
+  outline: none;
+}
+
+.btn:focus-visible,
+.icon-button:focus-visible,
+.link-underline:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(255, 77, 0, 0.55);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  left: 16px;
+  position: fixed;
+  top: 12px;
+  transform: translateY(-160%);
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* ------------------------------------------------------------------ */
+/* Motion                                                               */
+/* ------------------------------------------------------------------ */
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rise-in {
+  animation: rise-in 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  animation: ticker 28s linear infinite;
+  display: flex;
+  gap: 0;
+  width: max-content;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+
+  .ticker-track {
+    animation: none;
+  }
+}

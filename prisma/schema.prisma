@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// A single benchmark run against one model/agent.
+// NOTE: no column stores an API key. Keys are session-only and never persisted.
+model BenchmarkRun {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  modelName   String
+  provider    String // "anthropic" | "mock"
+  runsPerTask Int
+
+  overallScore     Float
+  speedScore       Float
+  accuracyScore    Float
+  qualityScore     Float
+  reliabilityScore Float
+  consistencyScore Float
+  costScore        Float
+
+  totalCostUsd   Float
+  totalInputTok  Int
+  totalOutputTok Int
+  avgTtftMs      Float
+  avgTokensPerSec Float
+
+  tasks TaskResult[]
+}
+
+// A saved API key. Only the AES-256-GCM ciphertext is stored — never plaintext.
+model ApiKey {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  label      String
+  provider   String   @default("anthropic")
+  ciphertext String
+  last4      String
+}
+
+model TaskResult {
+  id       String @id @default(cuid())
+  runId    String
+  run      BenchmarkRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  taskType     String
+  ttftMs       Float
+  totalMs      Float
+  tokensPerSec Float
+  inputTok     Int
+  outputTok    Int
+  costUsd      Float
+  qualityScore Float
+  success      Boolean
+  errorMsg     String?
+
+  @@index([runId])
+}
