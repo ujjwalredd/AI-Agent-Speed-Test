@@ -70,16 +70,26 @@ the app uses hosted Postgres.
 
 1. Create a Postgres database — e.g. [neon.tech](https://neon.tech) (free). Copy the
    **direct** (non-pooled) connection string.
-2. Import the repo into Vercel.
-3. In **Vercel → Project → Settings → Environment Variables**, add:
+2. **Create the tables once** (from your machine — the build does *not* touch the DB):
+   ```bash
+   DATABASE_URL="<your-neon-direct-url>" npm run db:push
+   ```
+   This is a one-time step; the tables persist in the database across deploys.
+3. Import the repo into Vercel.
+4. In **Vercel → Project → Settings → Environment Variables**, add (for the Production
+   environment):
    - `DATABASE_URL` — the Postgres connection string
    - `KEY_VAULT_SECRET` — a random 32-byte secret (`openssl rand -hex 32`)
    - *(optional)* `ANTHROPIC_API_KEY` — a server-side default key
-4. Deploy. The build runs `prisma generate && prisma db push && next build`, which
-   creates the tables automatically on first deploy — no manual migration step.
+5. Deploy. The build runs `prisma generate && next build` — no DB access at build time,
+   so a database hiccup can never fail your build.
 
-> If the build fails with `Environment variable not found: DATABASE_URL`, the env var
-> isn't set (or not applied to the Production environment) — add it and redeploy.
+> **Why not push tables during the build?** Mutating the schema at build time needs the
+> DB reachable on every deploy, and Neon's default *pooled* connection string breaks
+> `prisma db push`. Doing it once up front (step 2, with the direct URL) is more reliable.
+
+> If a benchmark run errors with a database/`relation does not exist` message, you
+> skipped step 2 — run `npm run db:push` against your `DATABASE_URL`.
 
 > **No API key?** On the **Run test** page, leave **"Use demo provider"** checked
 > to run against the built-in mock and see the full flow end to end.
