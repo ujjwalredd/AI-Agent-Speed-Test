@@ -77,8 +77,17 @@ export async function POST(request: NextRequest) {
         for await (const ev of runBenchmark(cfg)) {
           if (ev.type === "done") {
             finalResult = ev.result;
-            // Persist before forwarding so the runId is included.
-            const runId = await persist(ev.result, provider);
+            // Persistence is best-effort: a missing/unreachable database must not
+            // fail the run. The result still streams back; it just isn't saved.
+            let runId: string | undefined;
+            try {
+              runId = await persist(ev.result, provider);
+            } catch (dbErr) {
+              console.warn(
+                "Benchmark result not persisted:",
+                dbErr instanceof Error ? dbErr.message : dbErr,
+              );
+            }
             send({ ...ev, result: { ...ev.result, runId } });
           } else {
             send(ev);
