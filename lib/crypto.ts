@@ -10,10 +10,12 @@ import path from "path";
 // AES-256-GCM encryption for API keys stored at rest.
 //
 // The 32-byte secret comes from the KEY_VAULT_SECRET env var (hex or base64 or
-// raw string, hashed to 32 bytes). In development, if the env var is unset, a
-// random secret is generated once and stored in a gitignored `.key-vault-secret`
-// file so the vault works with zero configuration. Set KEY_VAULT_SECRET in
-// production.
+// raw string, hashed to 32 bytes). Set it in production (e.g. Vercel env vars).
+//
+// In LOCAL development only, if the env var is unset, a random secret is
+// generated once into a gitignored `.key-vault-secret` file so the vault works
+// with zero config. This file fallback is never used in production, where the
+// filesystem is read-only/ephemeral — the env var is required there.
 
 const SECRET_FILE = path.join(process.cwd(), ".key-vault-secret");
 
@@ -23,7 +25,15 @@ function loadSecret(): Buffer {
   if (cachedKey) return cachedKey;
 
   let raw = process.env.KEY_VAULT_SECRET;
+
   if (!raw) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "KEY_VAULT_SECRET is not set. Add it to your environment variables " +
+          "(e.g. in the Vercel dashboard) to enable the encrypted API key vault.",
+      );
+    }
+    // Local dev fallback: read or lazily create a random secret file.
     if (existsSync(SECRET_FILE)) {
       raw = readFileSync(SECRET_FILE, "utf8").trim();
     } else {

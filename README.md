@@ -41,22 +41,45 @@ Built with **Next.js (App Router) + TypeScript**, the official
 
 ## Setup
 
+The app uses **PostgreSQL** (works locally and on serverless hosts like Vercel).
+Get a free serverless database at [neon.tech](https://neon.tech), Vercel Postgres,
+or Supabase.
+
 ```bash
 # 1. Install dependencies (also runs `prisma generate`)
 npm install
 
 # 2. Configure environment
 cp .env.example .env
-# .env already defaults DATABASE_URL to a local SQLite file.
+# Edit .env — set DATABASE_URL to your Postgres connection string and
+# KEY_VAULT_SECRET to a random value (openssl rand -hex 32).
 
-# 3. Create the database and apply the schema
-npx prisma migrate dev --name init   # (already applied if prisma/migrations exists)
+# 3. Create the tables from the schema
+npx prisma db push
 
 # 4. Run the dev server
 npm run dev
 ```
 
 Open http://localhost:3000.
+
+## Deploy to Vercel
+
+SQLite does **not** work on Vercel (its filesystem is read-only and ephemeral), so
+the app uses hosted Postgres.
+
+1. Create a Postgres database — e.g. [neon.tech](https://neon.tech) (free). Copy the
+   **direct** (non-pooled) connection string.
+2. Import the repo into Vercel.
+3. In **Vercel → Project → Settings → Environment Variables**, add:
+   - `DATABASE_URL` — the Postgres connection string
+   - `KEY_VAULT_SECRET` — a random 32-byte secret (`openssl rand -hex 32`)
+   - *(optional)* `ANTHROPIC_API_KEY` — a server-side default key
+4. Deploy. The build runs `prisma generate && prisma db push && next build`, which
+   creates the tables automatically on first deploy — no manual migration step.
+
+> If the build fails with `Environment variable not found: DATABASE_URL`, the env var
+> isn't set (or not applied to the Production environment) — add it and redeploy.
 
 > **No API key?** On the **Run test** page, leave **"Use demo provider"** checked
 > to run against the built-in mock and see the full flow end to end.
