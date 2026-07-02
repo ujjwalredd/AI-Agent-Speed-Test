@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Archivo, Inter, JetBrains_Mono } from "next/font/google";
 import SiteNav from "@/components/SiteNav";
+import SmoothScroll from "@/components/SmoothScroll";
+import ScrollProgress from "@/components/ScrollProgress";
 import "./globals.css";
 
 const display = Archivo({
@@ -41,6 +43,8 @@ export default function RootLayout({
         <a className="skip-link btn btn-ink px-4" href="#main">
           Skip to content
         </a>
+        <ScrollProgress />
+        <SmoothScroll>
 
         {/* Logo-less header: identity carried by type alone. */}
         <header className="sticky top-0 z-40 border-b border-rule bg-paper/95 backdrop-blur-sm">
@@ -67,6 +71,7 @@ export default function RootLayout({
             <span>6 tasks · 6 axes · score 0–100</span>
           </div>
         </footer>
+        </SmoothScroll>
       </body>
     </html>
   );

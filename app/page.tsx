@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ScoreGauge from "@/components/ScoreGauge";
+import Reveal from "@/components/Reveal";
 import { ArrowRightIcon } from "@/components/Icons";
 
 const TICKER_ITEMS = [
@@ -86,7 +87,7 @@ export default function Home() {
       </section>
 
       {/* Sample report */}
-      <section className="relative mt-24">
+      <Reveal as="section" className="relative mt-24">
         <span aria-hidden="true" className="ghost-num absolute -top-10 right-0">
           01
         </span>
@@ -103,10 +104,10 @@ export default function Home() {
             <ScoreGauge score={87} label="Sample report" animate={false} />
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* The six tasks */}
-      <section className="relative mt-24">
+      <Reveal as="section" className="relative mt-24">
         <span aria-hidden="true" className="ghost-num absolute -top-10 right-0">
           02
         </span>
@@ -122,10 +123,10 @@ export default function Home() {
             </li>
           ))}
         </ol>
-      </section>
+      </Reveal>
 
       {/* Scoring axes */}
-      <section className="relative mt-24">
+      <Reveal as="section" className="relative mt-24">
         <span aria-hidden="true" className="ghost-num absolute -top-10 right-0">
           03
         </span>
@@ -145,10 +146,10 @@ export default function Home() {
             </div>
           ))}
         </div>
-      </section>
+      </Reveal>
 
       {/* Closing CTA */}
-      <section className="mt-28 border-t-2 border-rule-strong pt-12 text-center">
+      <Reveal as="section" className="mt-28 border-t-2 border-rule-strong pt-12 text-center">
         <h2 className="display-hero text-ink" style={{ fontSize: "clamp(2.5rem, 7vw, 5.5rem)" }}>
           Measure it.
         </h2>
@@ -162,7 +163,7 @@ export default function Home() {
           </Link>
         </div>
         <p className="mono-label mt-6">No key needed — the demo provider runs instantly.</p>
-      </section>
+      </Reveal>
     </div>
   );
 }

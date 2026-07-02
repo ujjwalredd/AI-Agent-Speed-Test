@@ -20,9 +20,7 @@ export default function SiteNav() {
             key={l.href}
             href={l.href}
             aria-current={active ? "page" : undefined}
-            className={`link-underline inline-flex min-h-11 items-center text-sm uppercase tracking-wide ${
-              active ? "" : "border-transparent"
-            }`}
+            className="nav-link inline-flex min-h-11 items-center text-sm uppercase tracking-wide"
           >
             {l.label}
           </Link>
